@@ -3,9 +3,9 @@ import io
 import os
 import shutil
 
-
 # initializing bad_chars_list 
-bad_chars = [';', ':', '!', "*", ",", "(", ")", "/"] 
+#  " < > # % { } | \ ^ ~ [ ] `
+bad_chars = [';', ':', '!', "*", ",", "(", ")", "/", "?", "{",  "}", "|", "[", "]", "`", "<", ">", "%", "#", "\"", "\\"] 
 
 # # printing original string  
 # print ("Original String : " + test_string) 
@@ -18,7 +18,7 @@ try:
 # Define the Path for the root text file for works folder
     filePath = os.path.join(parent, 'works.txt')
 # Create the root file with the Default title
-    file = io.open(filePath, "w", encoding='ISO-8859-1') 
+    file = io.open(filePath, "w", encoding='utf-8') 
     file.write("Title: Works") 
     file.close() 
 except OSError as error:  
@@ -33,11 +33,13 @@ with io.open('ab_export.csv', 'r', encoding='ISO-8859-1') as read_obj:
 # Iterate over each line as a ordered dictionary from artbutler csv
     for index,row in enumerate(csv_reader, start=1):
         # initializing test string  
-        test_string = row['Title'] + " " + row['Inventory Number']
+        test_string = row['Artist'] + "-" + row['Inventory Number']
+        # artistname = row['Artist']
         # using replace() to  
         # remove bad_chars  
         for i in bad_chars : 
             test_string = test_string.replace(i, '')
+        # clear_str = re.sub(r'[\xe2\x80\x99s]', '', test_string)
 # Define the sub directory paths for the works
 # Numbered Folders
 #        directory = str(index) + "_" + "-".join(test_string.split(" "))
@@ -56,14 +58,17 @@ with io.open('ab_export.csv', 'r', encoding='ISO-8859-1') as read_obj:
         try:  
             os.mkdir(path)
             filePathWork = os.path.join(path, 'work.txt')
-            file = io.open(filePathWork, 'w', encoding='ISO-8859-1')
+            file = io.open(filePathWork, 'w', encoding='utf-8')
             for x in range(0, col):
                 if column_names[x] == 'Image':
                     file.write("Cover: - " + row[column_names[x]].replace('binary/', '', 1) + "\n\n" + "----" + "\n\n")
                 elif column_names[x] == 'Image(s)':
                     pass
+                elif column_names[x] == 'Status':
+                    file.write("Abstatus:" + row[column_names[x]] + "\n\n" + "----" + "\n\n")
                 else:
-                    file.write(column_names[x] + ": " + row[column_names[x]] + "\n\n" + "----" + "\n\n")
+                    colname = "".join(column_names[x].split(" "))
+                    file.write(colname.capitalize() + ": " + row[column_names[x]] + "\n\n" + "----" + "\n\n")
             file.close()
         # Copy Files
             imageList = row['Image(s)'].split(",")
@@ -74,14 +79,14 @@ with io.open('ab_export.csv', 'r', encoding='ISO-8859-1') as read_obj:
                 imageListFileName = imageList[x].replace('binary/', '', 1) + ".txt"
                 imageListPath = os.path.join(path, imageListFileName)
                 print("Image(s) copied:", imageListFileName)
-                file = io.open(imageListPath, "w", encoding='ISO-8859-1')
+                file = io.open(imageListPath, "w", encoding='utf-8')
                 file.write("Template: image" + "\n\n" + "----" + "\n\n" + "Caption: " + row['Title'])
                 file.close()
             shutil.copy(row['Image'], path)
             imagetxtfilename = row['Image'].replace('binary/', '', 1) + ".txt"
             imagePath = os.path.join(path, imagetxtfilename)
             # print(imagetxtfilename)
-            file = io.open(imagePath, "w", encoding='ISO-8859-1')
+            file = io.open(imagePath, "w", encoding='utf-8')
             file.write("Template: image" + "\n\n" + "----" + "\n\n" + "Caption: " + row['Title'])
             file.close()
         except OSError as error:  

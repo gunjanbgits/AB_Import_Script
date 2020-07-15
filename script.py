@@ -33,7 +33,7 @@ with io.open('ab_export.csv', 'r', encoding='ISO-8859-1') as read_obj:
 # Iterate over each line as a ordered dictionary from artbutler csv
     for index,row in enumerate(csv_reader, start=1):
         # initializing test string  
-        test_string = row['Artist'] + "-" + row['Inventory Number']
+        test_string = row['Inventory Number']
         # artistname = row['Artist']
         # using replace() to  
         # remove bad_chars  

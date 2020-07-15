@@ -24,7 +24,7 @@ try:
 except OSError as error:  
     print(error)
 # open the csv file
-with io.open('ab_export.csv', 'r', encoding='UTF-8') as read_obj:
+with io.open('ab_export.csv', 'r', encoding='ISO-8859-1') as read_obj:
     csv_reader = DictReader(read_obj, delimiter=';')
 # Get the Column Names 
     column_names = csv_reader.fieldnames
